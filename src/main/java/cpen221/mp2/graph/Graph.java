@@ -8,6 +8,8 @@ import java.util.*;
  * @param <V> represents a vertex type
  */
 public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>, IGraph<V, E> {
+    Set<V> vertices= new HashSet<>();
+    Set<E> edges = new HashSet<>();
 
     // TODO: Implement this type
 
@@ -77,4 +79,104 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             remove(trim);
         }
     }
+    //Dante
+    @Override
+    public boolean addVertex(V v) {
+        return false;
+    }
+
+    @Override
+    public boolean vertex(V v) {
+        return false;
+    }
+
+    @Override
+    public boolean addEdge(E e) {
+        return false;
+    }
+
+    @Override
+    public boolean edge(E e) {
+        return false;
+    }
+
+    @Override
+    public boolean edge(V v1, V v2) {
+        return false;
+    }
+
+    @Override
+    public int edgeLength(V v1, V v2) {
+        return 0;
+    }
+
+    @Override
+    public int edgeLengthSum() {
+        return 0;
+    }
+
+    @Override
+    public boolean remove(E e) {
+        return false;
+    }
+
+    @Override
+    public boolean remove(V v) {
+        return false;
+    }
+
+    @Override
+    public Set<V> allVertices() {
+        return null;
+    }
+
+    @Override
+    public Set<E> allEdges(V v) {
+        return null;
+    }
+
+    @Override
+    public Set<E> allEdges() {
+        return null;
+    }
+
+    @Override
+    public Map<V, E> getNeighbours(V v) {
+        return null;
+    }
+
+    @Override
+    public Set<V> search(V v, int range) {
+        return null;
+    }
+    @Override
+    public E getEdge(V v1, V v2) {
+        return null;
+    }
+
+
+
+
+    @Override
+    public List<V> shortestPath(V source, V sink) {
+        return null;
+    }
+
+    @Override
+    public List<E> minimumSpanningTree() {
+        return null;
+    }
+
+    @Override
+    public int pathLength(List<V> path) {
+        return 0;
+    }
+
+
+    @Override
+    public int diameter() {
+        return 0;
+    }
+
+//
 }
