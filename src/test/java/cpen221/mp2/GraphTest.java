@@ -5,6 +5,11 @@ import cpen221.mp2.graph.Graph;
 import cpen221.mp2.graph.Vertex;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import static org.junit.Assert.assertEquals;
 
 public class GraphTest {
@@ -31,6 +36,23 @@ public class GraphTest {
 
         assertEquals(e2, g.getEdge(v2, v3));
         assertEquals(21, g.shortestPath(v2, v2));
+    }
+    @Test
+    public void notFinal(){
+        List<Vertex> test= new ArrayList<>();
+        Vertex tester= new Vertex(1,"hello");
+        test.add(tester);
+        tester=new Vertex(2,"bye");
+        assert(test.get(0).id()==1);
+    }
+    @Test
+    public void notFinal2(){
+        List<Edge> test= new ArrayList<>();
+        Edge tester= new Edge(new Vertex(1,""),new Vertex(2,""),20);
+        test.add(tester);
+        assert(test.contains(new Edge(new Vertex(1,""),new Vertex(2,""),10)));
+
+
     }
 
 }
