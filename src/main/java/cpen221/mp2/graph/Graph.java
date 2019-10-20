@@ -111,6 +111,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 }
             }
         }
+        if(vertices.contains(v1)&&vertices.contains(v2)){
+            return Integer.MAX_VALUE;
+        }
         throw new noEdgeFoundException();
     }
 
