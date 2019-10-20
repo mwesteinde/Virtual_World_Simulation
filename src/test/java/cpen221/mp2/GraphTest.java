@@ -3,6 +3,7 @@ package cpen221.mp2;
 import cpen221.mp2.graph.Edge;
 import cpen221.mp2.graph.Graph;
 import cpen221.mp2.graph.Vertex;
+import cpen221.mp2.graph.noEdgeFoundException;
 import org.junit.Test;
 
 import java.util.*;
@@ -61,7 +62,7 @@ public class GraphTest {
 
 
     }
-    
+
     @Test
     public void graphBasic1(){//coverage from repInv to allEdges
         Vertex v1 = new Vertex(1, "A");
@@ -177,9 +178,16 @@ public class GraphTest {
 
 
         }
-        // @test()
+        @Test(expected = noEdgeFoundException.class)
     public void except1(){
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.getEdge(new Vertex(1,"hi"),new Vertex(2,"bye"));
+    }
 
+    @Test(expected = noEdgeFoundException.class)
+    public void except2(){
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.edgeLength(new Vertex(1,"hi"),new Vertex(2,"bye"));
     }
 
 
