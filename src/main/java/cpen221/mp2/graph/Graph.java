@@ -11,9 +11,21 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     Set<V> vertices= new HashSet<>();
     Set<E> edges = new HashSet<>();
 
-    // TODO: Implement this type
-    //Dante
+    /**
+     * the representation invariant is that each edge connects two different vertices in the graph
+     *
+     * @return true if the representation Invariant is held, false otherwise
+     */
 
+    public boolean repInv(){
+       for(Edge i:edges){
+           if((!(vertices.contains(i.v1())&&vertices.contains(i.v2())))||(i.v1().equals(i.v2()))){
+               return false;
+           }
+       }
+
+        return true;
+    }
 
     /**
      * Add a vertex to the graph
@@ -59,9 +71,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         }
         if(vertices.contains(e.v1())&&vertices.contains(e.v2())) {
             edges.add((E)(new Edge(e.v1(),e.v2(),e.length())));
+            assert(repInv());
             return true;
         }
         return false;
+
     }
 
 
@@ -158,6 +172,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public boolean remove(V v) {
         if(vertices.contains(v)){
             vertices.remove(v);
+            assert(repInv());
             return true;
         }
         return false;
@@ -256,7 +271,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         Edge<V> lookingFor = new Edge<V>(v1,v2);
         Set<E> neigh = allEdges(v1);
         for(Edge i:neigh){
-            if(i.v2().equals(v2)){
+            if(i.v2().equals(v2)||i.v1().equals(v2)){
                 return (E)i;
             }
 
@@ -305,11 +320,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
 
 
-    public boolean repInvarient(){
-        return true;
-        //all edges correlate to two verticies
-
-    }
 
 
 
