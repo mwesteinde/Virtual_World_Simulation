@@ -402,38 +402,42 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public List<E> minimumSpanningTree() {
         Set<V> untouchedVertices = new HashSet<>(vertices);
         Set<V> un = new HashSet<>(vertices);
-        Set<V> connectedVertices = new HashSet<>();
+        List<V> connectedVertices = new ArrayList<>();
         List<E> returnedList = new ArrayList<>();
         boolean sentinel = true;
         E max = null;
         V maxVertex = null;
-        boolean sentinel2 = false;
+       
 
         for (V vertex1: vertices) {
             if (sentinel) {
                 connectedVertices.add(vertex1);
+                un.remove(vertex1);
                 sentinel = false;
             }
         }
 
-        for (V vertex: connectedVertices) {
-            int minLength = Integer.MAX_VALUE;
-            for (V connectors: untouchedVertices) {
-                if (!vertex.equals(connectors) && un.contains(connectors)) {
-                    if (edgeLength(vertex, connectors) < minLength) {
-                        max = getEdge(vertex, connectors);
-                        maxVertex = connectors;
-                        sentinel2 = false;
+        for (int j = 0; j < connectedVertices.size(); j++) {
+            for (int i = 0; i < connectedVertices.size(); i++) {
+                int minLength = Integer.MAX_VALUE;
+                for (V connectors : untouchedVertices) {
+                    if (!connectedVertices.get(i).equals(connectors) && un.contains(connectors)) {
+                        if (edgeLength(connectedVertices.get(i), connectors) < minLength) {
+                            max = getEdge(connectedVertices.get(i), connectors);
+                            maxVertex = connectors;
+                            minLength = edgeLength(connectedVertices.get(i), connectors);
+
+                        }
                     }
-                } else {
-                    sentinel2 = true;
+
                 }
-            }
-            if (!sentinel2) {
-                returnedList.add(max);
-                if (maxVertex != null) {
-                    un.remove(maxVertex);
-                    connectedVertices.add(maxVertex);
+                if (!returnedList.contains(max)) {
+                    returnedList.add(max);
+                    if (maxVertex != null) {
+                        un.remove(maxVertex);
+                        connectedVertices.add(maxVertex);
+                    }
+
                 }
             }
         }
