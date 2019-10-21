@@ -1,5 +1,7 @@
 package cpen221.mp2.graph;
 
+import javafx.util.Pair;
+
 import java.util.*;
 
 /**
@@ -83,7 +85,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * Check if an edge is part of the graph
      *
      * @param e the edge to check in the graph
-     * @return true if e is an edge in the graoh and false otherwise
+     * @return true if e is an edge in the graph and false otherwise
      */
     @Override
     public boolean edge(E e) {
@@ -120,7 +122,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         if(edge(v1,v2)){
             Set<E> neigh = allEdges(v1);
             for(Edge i:neigh){
-                if(i.v2().equals(v2)){
+                if(i.v2().equals(v2) || i.v2().equals(v1)){
                    return i.length();
                 }
             }
@@ -221,8 +223,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     @Override
     public Set<E> allEdges() {
-        Set<E> all=new HashSet<E>();
-        for(E i:edges){
+        Set<E> all = new HashSet<E>();
+        for(E i:edges) {
             all.add(i);
         }
         return all;
@@ -270,8 +272,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public E getEdge(V v1, V v2) {
         Edge<V> lookingFor = new Edge<V>(v1,v2);
         Set<E> neigh = allEdges(v1);
-        for(Edge i:neigh){
-            if(i.v2().equals(v2)||i.v1().equals(v2)){
+        for(Edge i:neigh) {
+            if(i.v2().equals(v2)||i.v1().equals(v2)) {
                 return (E)i;
             }
 
@@ -288,9 +290,14 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     @Override
     public int pathLength(List<V> path) {
-        int plength=0;
-        for(int i=0;i<path.size()-1;i++){
-            plength+=edgeLength(path.get(i),path.get(i+1));
+        int plength = 0;
+        int adder = 0;
+        for(int i = 0; i < path.size()-1; i++){
+            adder = edgeLength(path.get(i),path.get(i+1));
+            if (adder == Integer.MAX_VALUE) {
+                return adder;
+            }
+            plength += adder;
         }
         return plength;
     }
@@ -298,24 +305,197 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
 //end of Dante's section
 
+    /**
+     * Compute the shortest path from source to sink
+     *
+     * @param source the start vertex
+     * @param sink   the end vertex
+     * @return the vertices, in order, on the shortest path from source to sink (both end points are part of the list)
+     */
+
     @Override
     public List<V> shortestPath(V source, V sink) {
-        return null;
+        Map<V, Pair<V,Integer>> unvisitedNodes = new HashMap<>();
+        Map<V, Pair<V,Integer>> visitednodes = new HashMap<>();
+        Map<V, E> neigh = new HashMap<>();
+        List<V> path = new ArrayList<>();
+        Pair<V,Integer> thisPair;
+        boolean destination = false;
+        V present = source;
+
+        Pair<V, Integer> now = new Pair(present, 0);
+        visitednodes.put(present, now);
+
+        for (V current: vertices) {
+            if (current.equals(source)) {
+            } else {
+                thisPair = new Pair (source, Integer.MAX_VALUE);
+                unvisitedNodes.put(current, (thisPair));
+            }
+        }
+
+        while (!destination) {
+            int max = 0;
+            int presentLength = visitednodes.get(present).getValue();
+            neigh = getNeighbours(present);
+
+            for (Map.Entry mapElement : neigh.entrySet()) {
+                V thisElement = (V) mapElement.getKey();
+                if (unvisitedNodes.containsKey(thisElement)) {
+                    int length = edgeLength(present, thisElement) + presentLength;
+                    if (length < unvisitedNodes.get(thisElement).getValue()) {
+                        thisPair = new Pair(present, length);
+                        unvisitedNodes.replace(thisElement, thisPair);
+                    }
+                }
+            }
+
+
+            present = getNextNode(unvisitedNodes);
+            if (present.equals(sink)) {
+                destination = true;
+            }
+            visitednodes.put(present, unvisitedNodes.get(present));
+            unvisitedNodes.remove(present);
+
+        }
+        path.add(present);
+        destination = false;
+        while (!destination) {
+            present = visitednodes.get(present).getKey();
+            path.add(0,present);
+            if (present.equals(source)) {
+                destination = true;
+            }
+        }
+
+
+
+        return path;
+
+
     }
+
+    private V getNextNode(Map<V,Pair<V,Integer>> maps) {
+        V stored = null;
+        for (Map.Entry mapElement : maps.entrySet()) {
+            int min = Integer.MAX_VALUE;
+            Pair<V,Integer> edPair = (Pair) mapElement.getValue();
+            int ed = (int) edPair.getValue();
+            V ve = (V) mapElement.getKey();
+            if (ed < min) {
+                min = ed;
+                stored = ve;
+            }
+        }
+            return stored;
+    }
+
+    /**
+     * Compute the minimum spanning tree of the graph.
+     * See https://en.wikipedia.org/wiki/Minimum_spanning_tree
+     *
+     * @return a list of edges that forms a minimum spanning tree of the graph
+     */
 
     @Override
     public List<E> minimumSpanningTree() {
-        return null;
+        Set<V> untouchedVertices = new HashSet<>(vertices);
+        Set<V> un = new HashSet<>(vertices);
+        Set<V> connectedVertices = new HashSet<>();
+        List<E> returnedList = new ArrayList<>();
+        boolean sentinel = true;
+        E max = null;
+        V maxVertex = null;
+        boolean sentinel2 = false;
+
+        for (V vertex1: vertices) {
+            if (sentinel) {
+                connectedVertices.add(vertex1);
+                sentinel = false;
+            }
+        }
+
+        for (V vertex: connectedVertices) {
+            int minLength = Integer.MAX_VALUE;
+            for (V connectors: untouchedVertices) {
+                if (!vertex.equals(connectors) && un.contains(connectors)) {
+                    if (edgeLength(vertex, connectors) < minLength) {
+                        max = getEdge(vertex, connectors);
+                        maxVertex = connectors;
+                        sentinel2 = false;
+                    }
+                } else {
+                    sentinel2 = true;
+                }
+            }
+            if (!sentinel2) {
+                returnedList.add(max);
+                if (maxVertex != null) {
+                    un.remove(maxVertex);
+                    connectedVertices.add(maxVertex);
+                }
+            }
+        }
+
+        return returnedList;
     }
+
+    public int getMST() {
+        List<E> list= minimumSpanningTree();
+        int sum = 0;
+        for (E edge: list) {
+            sum += edge.length();
+        }
+        return sum;
+
+    }
+
+    /**
+     * Compute the diameter of the graph.
+     * <ul>
+     * <li>The diameter of a graph is the length of the longest shortest path in the graph.</li>
+     * <li>If a graph has multiple components then we will define the diameter
+     * as the diameter of the largest component.</li>
+     * </ul>
+     *
+     * @return the diameter of the graph.
+     */
 
     @Override
     public int diameter() {
-        return 0;
+        int diameter;
+        int maxdiameter = 0;
+
+        for (V i: vertices) {
+            for (V j: vertices) {
+                diameter = pathLength(shortestPath(i,j));
+                if (diameter > maxdiameter) {
+                    maxdiameter = diameter;
+                }
+            }
+        }
+
+        return maxdiameter;
     }
+
+    /**
+     * Obtain all vertices w that are no more than a <em>path distance</em> of range from v.
+     *
+     * @param v     the vertex to start the search from.
+     * @param range the radius of the search.
+     * @return a set of vertices that are within range of v (this set does not contain v).
+     */
 
     @Override
     public Set<V> search(V v, int range) {
-        return null;
+        Set<V> returnedSet = new HashSet<>();
+        for (V i: vertices) {
+            if (pathLength(shortestPath(v, i)) < range) {
+                returnedSet.add(i);
+            }
+        }
+        return returnedSet;
     }
 
 

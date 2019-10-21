@@ -23,6 +23,12 @@ public class GraphTest {
         Edge<Vertex> e2 = new Edge<>(v2, v3, 7);
         Edge<Vertex> e3 = new Edge<>(v1, v4, 9);
 
+        List<Vertex> expected = new ArrayList<>();
+        expected.add(v3);
+        expected.add(v2);
+        expected.add(v1);
+        expected.add(v4);
+
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
         g.addVertex(v2);
@@ -33,7 +39,12 @@ public class GraphTest {
         g.addEdge(e3);
 
         assertEquals(e2, g.getEdge(v2, v3));
-        assertEquals(21, g.shortestPath(v2, v2));
+        assertEquals(expected, g.shortestPath(v3, v4));
+        assertEquals(21, g.pathLength(g.shortestPath(v3, v4)));
+
+
+
+        assertEquals(21, g.getMST());
     }
 
     @Test
