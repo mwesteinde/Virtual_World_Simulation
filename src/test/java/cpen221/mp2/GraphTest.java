@@ -227,7 +227,7 @@ public class GraphTest {
         path.add(v1);
         path.add(v2);
         path.add(v3);
-        assertEquals(g.pathLength(path),12);
+        assertEquals(g.pathLength(path),12);  //This test seems to fail
         path.add(v4);
         assertEquals(g.pathLength(path),Integer.MAX_VALUE);
 
