@@ -142,7 +142,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public int edgeLengthSum() {
         int total=0;
         for(Edge i:edges){
-            total+=i.length();
+            if (i.length()!=(Integer.MAX_VALUE)) {
+                total+=i.length();
+            }
         }
         return total;
     }

@@ -184,10 +184,6 @@ public class GraphTest {
         path.add(v4);
         assertEquals(g.pathLength(path),Integer.MAX_VALUE);
 
-
-
-
-
         }
         @Test(expected = noEdgeFoundException.class)
     public void except1(){
@@ -200,6 +196,100 @@ public class GraphTest {
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.edgeLength(new Vertex(1,"hi"),new Vertex(2,"bye"));
     }
+
+    @Test
+    public void shortest1(){
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+
+        Edge<Vertex> e1 = new Edge<>(v2, v1, 5);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 1);
+        Edge<Vertex> e3 = new Edge<>(v1, v3, 2);
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+         List<Vertex> ret=g.shortestPath(v1,v2);
+
+        assertEquals(ret.get(0),new Vertex(1,"A"));
+        assertEquals(ret.get(1),new Vertex(3,"C"));
+
+    }
+
+    @Test
+    public void minSpan1(){
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+
+        Edge<Vertex> e1 = new Edge<>(v2, v1, 5);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 1);
+        Edge<Vertex> e3 = new Edge<>(v1, v3, 2);
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        List<Edge<Vertex>> ret=g.minimumSpanningTree();
+        assertTrue(ret.contains(e2));
+        assertTrue(ret.contains(e3));
+
+    }
+
+    @Test
+    public void diam1(){
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+
+        Edge<Vertex> e1 = new Edge<>(v2, v1, 5);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 1);
+        Edge<Vertex> e3 = new Edge<>(v1, v3, 2);
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        assertEquals(g.diameter(),3);
+
+
+    }
+
+    @Test
+    public void sear1(){
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+
+        Edge<Vertex> e1 = new Edge<>(v2, v1, 5);
+        Edge<Vertex> e3 = new Edge<>(v1, v3, 2);
+        Edge<Vertex> e4 = new Edge<>(v1, v4, 1);
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addEdge(e1);
+
+        g.addEdge(e3);
+        g.addEdge(e4);
+        Set<Vertex> ret=g.search(v1,3);
+        assertTrue(ret.contains(v4));
+        assertTrue(ret.contains(v3));
+
+
+
+    }
+
 
 
 
