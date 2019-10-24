@@ -184,10 +184,6 @@ public class GraphTest {
         path.add(v4);
         assertEquals(g.pathLength(path),Integer.MAX_VALUE);
 
-
-
-
-
         }
         @Test(expected = noEdgeFoundException.class)
     public void except1(){
