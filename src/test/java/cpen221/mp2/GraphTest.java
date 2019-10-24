@@ -48,6 +48,53 @@ public class GraphTest {
     }
 
     @Test
+    public void testCreateGraph2() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+        Vertex v5 = new Vertex(5, "E");
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 1);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 5);
+        Edge<Vertex> e3 = new Edge<>(v1, v3, 7);
+        Edge<Vertex> e4 = new Edge<>(v2, v4, 4);
+        Edge<Vertex> e5 = new Edge<>(v4, v5, 2);
+        Edge<Vertex> e6 = new Edge<>(v5, v3, 6);
+        Edge<Vertex> e7 = new Edge<>(v2, v5, 3);
+
+
+        List<Vertex> expected = new ArrayList<>();
+        expected.add(v3);
+        expected.add(v2);
+        expected.add(v1);
+        expected.add(v4);
+        expected.add(v5);
+
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        expected.add(v5);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+        g.addEdge(e5);
+        g.addEdge(e6);
+
+        //assertEquals(e2, g.getEdge(v2, v3));
+        //assertEquals(expected, g.shortestPath(v3, v4));
+        //assertEquals(21, g.pathLength(g.shortestPath(v3, v4)));
+
+
+
+        assertEquals(11, g.getMST());
+    }
+
+    @Test
     public void mutator1(){
         List<Vertex> test= new ArrayList<>();
         Vertex tester= new Vertex(1,"hello");
