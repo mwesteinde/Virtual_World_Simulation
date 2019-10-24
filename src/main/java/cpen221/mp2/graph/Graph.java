@@ -122,16 +122,18 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         if(edge(v1,v2)){
             Set<E> neigh = allEdges(v1);
             for(Edge i:neigh){
-                if(i.v2().equals(v2) || i.v2().equals(v1)){
-                   return i.length();
+                if(i.v2().equals(v2)){
+                    return i.length();
+                    }
                 }
             }
+            if(vertices.contains(v1)&&vertices.contains(v2)){
+                return Integer.MAX_VALUE;
+            }
+            throw new noEdgeFoundException();
         }
-        if(vertices.contains(v1)&&vertices.contains(v2)){
-            return Integer.MAX_VALUE;
-        }
-        throw new noEdgeFoundException();
-    }
+
+
 
     /**
      * Obtain the sum of the lengths of all edges in the graph
@@ -295,6 +297,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         int plength = 0;
         int adder = 0;
         for(int i = 0; i < path.size()-1; i++){
+            V thid = path.get(i);
+            V thid2 = path.get(i+1);
+
             adder = edgeLength(path.get(i),path.get(i+1));
             if (adder == Integer.MAX_VALUE) {
                 return adder;
@@ -403,46 +408,39 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     @Override
     public List<E> minimumSpanningTree() {
         Set<V> untouchedVertices = new HashSet<>(vertices);
-        Set<V> un = new HashSet<>(vertices);
         List<V> connectedVertices = new ArrayList<>();
         List<E> returnedList = new ArrayList<>();
         boolean sentinel = true;
         E max = null;
         V maxVertex = null;
+        int minLength;
        
 
         for (V vertex1: vertices) {
             if (sentinel) {
                 connectedVertices.add(vertex1);
-                un.remove(vertex1);
+                untouchedVertices.remove(vertex1);
                 sentinel = false;
             }
         }
 
-        for (int j = 0; j < connectedVertices.size(); j++) {
-            for (int i = 0; i < connectedVertices.size(); i++) {
-                int minLength = Integer.MAX_VALUE;
-                for (V connectors : untouchedVertices) {
-                    if (!connectedVertices.get(i).equals(connectors) && un.contains(connectors)) {
-                        if (edgeLength(connectedVertices.get(i), connectors) < minLength) {
-                            max = getEdge(connectedVertices.get(i), connectors);
-                            maxVertex = connectors;
-                            minLength = edgeLength(connectedVertices.get(i), connectors);
-
-                        }
+        while (untouchedVertices.size() > 0) {
+            minLength = Integer.MAX_VALUE;
+            for (V connectors: untouchedVertices) {
+                for (V connected: connectedVertices) {
+                    if (edgeLength(connectors, connected) < minLength) {
+                        max = getEdge(connectors, connected);
+                        maxVertex = connectors;
+                        minLength = edgeLength(connectors, connected);
                     }
-
-                }
-                if (!returnedList.contains(max)) {
-                    returnedList.add(max);
-                    if (maxVertex != null) {
-                        un.remove(maxVertex);
-                        connectedVertices.add(maxVertex);
-                    }
-
                 }
             }
+            returnedList.add(max);
+            untouchedVertices.remove(maxVertex);
+            connectedVertices.add(maxVertex);
         }
+
+
 
         return returnedList;
     }
@@ -475,9 +473,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
         for (V i: vertices) {
             for (V j: vertices) {
-                diameter = pathLength(shortestPath(i,j));
-                if (diameter > maxdiameter) {
-                    maxdiameter = diameter;
+                if (!(i.equals(j))) {
+                    diameter = pathLength(shortestPath(i, j));
+                    if (diameter > maxdiameter) {
+                        maxdiameter = diameter;
+                    }
                 }
             }
         }
@@ -497,8 +497,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public Set<V> search(V v, int range) {
         Set<V> returnedSet = new HashSet<>();
         for (V i: vertices) {
-            if (pathLength(shortestPath(v, i)) < range) {
-                returnedSet.add(i);
+            if (!i.equals(v)) {
+                int letsgo = pathLength(shortestPath(v, i));
+                if (pathLength(shortestPath(v, i)) < range) {
+                    returnedSet.add(i);
+                }
             }
         }
         return returnedSet;
