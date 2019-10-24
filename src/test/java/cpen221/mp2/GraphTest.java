@@ -249,7 +249,7 @@ public class GraphTest {
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
-        Vertex v3 = new Vertex(3, "C"); ///hhhh
+        Vertex v3 = new Vertex(3, "C");
         Vertex v4 = new Vertex(4, "D");
 
         Edge<Vertex> e1 = new Edge<>(v2, v1, 5);
