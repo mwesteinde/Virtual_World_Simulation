@@ -33,7 +33,7 @@ public interface IGraph<V extends Vertex, E extends Edge<V>> {
      * Check if an edge is part of the graph
      *
      * @param e the edge to check in the graph
-     * @return true if e is an edge in the graoh and false otherwise
+     * @return true if e is an edge in the graph and false otherwise
      */
     public boolean edge(E e);
 
