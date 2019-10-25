@@ -104,7 +104,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean edge(V v1, V v2) {
-      if(edges.contains(new Edge(v1,v2))){
+      if(edges.contains(new Edge(v1,v2)) || edges.contains(new Edge(v2,v1))){
           return true;
       }
       return false;
@@ -120,12 +120,12 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     @Override
     public int edgeLength(V v1, V v2) {
         if(edge(v1,v2)){
-            Set<E> neigh = allEdges(v1);
-            for(Edge i:neigh){
-                if(i.v2().equals(v2)){
+            for (Edge i: edges) {
+                if ((i.v2().equals(v2) && i.v1().equals(v1)) || i.v1().equals(v2) && i.v2().equals(v1)) {
                     return i.length();
-                    }
                 }
+            }
+
             }
             if(vertices.contains(v1)&&vertices.contains(v2)){
                 return Integer.MAX_VALUE;
@@ -330,6 +330,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         boolean destination = false;
         V present = source;
 
+        if (source.equals(sink)) {
+            path.add(source);
+            return path;
+        }
+
         Pair<V, Integer> now = new Pair(present, 0);
         visitednodes.put(present, now);
 
@@ -473,12 +478,10 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
         for (V i: vertices) {
             for (V j: vertices) {
-                if (!(i.equals(j))) {
                     diameter = pathLength(shortestPath(i, j));
                     if (diameter > maxdiameter) {
                         maxdiameter = diameter;
                     }
-                }
             }
         }
 
@@ -497,12 +500,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public Set<V> search(V v, int range) {
         Set<V> returnedSet = new HashSet<>();
         for (V i: vertices) {
-            if (!i.equals(v)) {
-                int letsgo = pathLength(shortestPath(v, i));
                 if (pathLength(shortestPath(v, i)) < range) {
                     returnedSet.add(i);
                 }
-            }
         }
         return returnedSet;
     }
