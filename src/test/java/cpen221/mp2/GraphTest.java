@@ -77,13 +77,14 @@ public class GraphTest {
         g.addVertex(v2);
         g.addVertex(v3);
         g.addVertex(v4);
-        expected.add(v5);
+        g.addVertex(v5);
         g.addEdge(e1);
         g.addEdge(e2);
         g.addEdge(e3);
         g.addEdge(e4);
         g.addEdge(e5);
         g.addEdge(e6);
+        g.addEdge(e7);
 
         //assertEquals(e2, g.getEdge(v2, v3));
         //assertEquals(expected, g.shortestPath(v3, v4));

@@ -22,12 +22,12 @@ public class MillenniumFalcon implements Spaceship {
 
     @Override
     public void hunt(HunterStage state) {
-        // TODO: Implement this method
+
     }
 
     @Override
     public void gather(GathererStage state) {
-        // TODO: Implement this method
+
     }
 
 }
