@@ -325,6 +325,7 @@ public class GraphTest {
         g.addVertex(v1);
         g.addVertex(v2);
         g.addVertex(v3);
+        g.addVertex(v4);
         g.addEdge(e1);
 
         g.addEdge(e3);
