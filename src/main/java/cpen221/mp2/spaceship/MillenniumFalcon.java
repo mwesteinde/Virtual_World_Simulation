@@ -49,8 +49,10 @@ public class MillenniumFalcon implements Spaceship {
      */
     @Override
     public void hunt(HunterStage state) {
+
         //using some sort of alogrythm we have to get to kamino as quick as possible
         //you can find the methods you can call from the interface HunterStage. I assume it is implemented somewhere.
+
     }
 
 
@@ -74,8 +76,10 @@ public class MillenniumFalcon implements Spaceship {
      */
     @Override
     public void gather(GathererStage state) {
+
         //pretty sure we want to hit as many planets as possible on the way back to earth. I think this is a variation of knapsack recursion question
         //same as before, use GathererStage interface methods to get to earth while reaching as many planets as possible
+
 
     }
 

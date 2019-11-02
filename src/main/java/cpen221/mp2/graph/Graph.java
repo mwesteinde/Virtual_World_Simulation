@@ -19,7 +19,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return true if the representation Invariant is held, false otherwise
      */
 
-    public boolean repInv(){
+   /* public boolean repInv(){
        for(Edge i:edges){
            if((!(vertices.contains(i.v1())&&vertices.contains(i.v2())))||(i.v1().equals(i.v2()))){
                return false;
@@ -27,7 +27,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
        }
 
         return true;
-    }
+    }*/
 
     /**
      * Add a vertex to the graph
@@ -72,8 +72,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             return false;
         }
         if(vertices.contains(e.v1())&&vertices.contains(e.v2())) {
-            edges.add((E)(new Edge(e.v1(),e.v2(),e.length())));
-            assert(repInv());
+            edges.add((e));
+            //assert(repInv());
             return true;
         }
         return false;
@@ -104,9 +104,14 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean edge(V v1, V v2) {
-      if(edges.contains(new Edge(v1,v2)) || edges.contains(new Edge(v2,v1))){
+        for (E i: edges) {
+            if (i.v2().equals(v2) && i.v1().equals(v1) || i.v1().equals(v2) && i.v2().equals(v1)) {
+                return true;
+            }
+        }
+     /* if(edges.contains(new Edge(v1,v2)) || edges.contains(new Edge(v2,v1))){
           return true;
-      }
+      }*/
       return false;
     }
 
@@ -178,7 +183,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public boolean remove(V v) {
         if(vertices.contains(v)){
             vertices.remove(v);
-            assert(repInv());
+           // assert(repInv());
             return true;
         }
         return false;
@@ -192,11 +197,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Set<V> allVertices() {
-        Set<V> all=new HashSet<V>();
+        /*Set<V> all=new HashSet<V>();
         for(V i:vertices){
             all.add(i);
-        }
-        return all;
+        }*/
+        return vertices;
     }
 
     /**
@@ -211,8 +216,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public Set<E> allEdges(V v) {
         Set<E> onv=new HashSet<E>();
         for(E i:edges){
-            if(i.v1().equals(v)||i.v2().equals(v)){
-                onv.add((E)(new Edge(i.v1(),i.v2(),i.length())));
+
+            if(i.v1().equals(v) || i.v2().equals(v)){
+                onv.add(i);
             }
         }
         return onv;
@@ -227,11 +233,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     @Override
     public Set<E> allEdges() {
-        Set<E> all = new HashSet<E>();
+        /*Set<E> all = new HashSet<E>();
         for(E i:edges) {
             all.add(i);
-        }
-        return all;
+        }*/
+        return edges;
     }
 
 
@@ -274,10 +280,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     @Override
     public E getEdge(V v1, V v2) {
-        Edge<V> lookingFor = new Edge<V>(v1,v2);
-        Set<E> neigh = allEdges(v1);
-        for(Edge i:neigh) {
-            if(i.v2().equals(v2)||i.v1().equals(v2)) {
+
+        for(Edge i:edges) {
+            if(i.v2().equals(v2) && i.v1().equals(v1)||i.v1().equals(v2) && i.v2().equals(v1)) {
                 return (E)i;
             }
 
