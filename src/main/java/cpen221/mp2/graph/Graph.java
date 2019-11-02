@@ -2,32 +2,78 @@ package cpen221.mp2.graph;
 
 import javafx.util.Pair;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Random;
+import java.util.Deque;
 
 /**
- * Represents a graph with vertices of type V.
+ * Abstraction function:
+ * Represents a graph with vertices and edges
+ * @vertices contains all vertices of the graph
+ * @edges contains all edges between these vertices in the graph
  *
- * @param <V> represents a vertex type
+ * representation invariant:
+ * @vertices contains elements that all have a different ID found by name.id()
+ * no elements are null
+ *
+ * @edges contains edges made exclusively by vertices in @vertices
+ * no two edges span the same two vertices
+ *no edge has a length/weight of 0
+ * no edge is null
+ *
  */
 public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>, IGraph<V, E> {
     Set<V> vertices= new HashSet<>();
     Set<E> edges = new HashSet<>();
 
-    /**
-     * the representation invariant is that each edge connects two different vertices in the graph
-     *
-     * @return true if the representation Invariant is held, false otherwise
-     */
+    /*  representation invariant:
+        * @vertices contains elements that all have a different ID found by name.id()
+            * no elements are null
+            *
+            * @edges contains edges made exclusively by vertices in @vertices
+            * no two edges span the same two vertices
+ *no edge has a length/weight of 0
+            * no edge is null
+            *
+            */
 
-   /* public boolean repInv(){
-       for(Edge i:edges){
-           if((!(vertices.contains(i.v1())&&vertices.contains(i.v2())))||(i.v1().equals(i.v2()))){
+   public boolean checkRep(){
+       Set<Integer> ids=new HashSet<>();
+       for(Vertex i:vertices){
+           if(ids.contains(i.id())){
                return false;
+           }else{
+               ids.add(i.id());
            }
        }
+       for(Edge i:edges){
+          if((!vertices.contains(i.v1())||(!vertices.contains(i.v2())))){
+               return false;
+           }else if(i.length()<=0){
+              return false;
+          }
+          boolean fSelf=false;
+          for(Edge j:edges){
+              if (i.equals(j)) {
+                  if(fSelf){
+                      return false;
+                  }else{
+                      fSelf=true;
+                  }
 
-        return true;
-    }*/
+              }
+          }
+       }
+
+       return true;
+    }
 
     /**
      * Add a vertex to the graph
@@ -41,7 +87,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             return false;
         }
         vertices.add((v));
+        assert(checkRep());
         return true;
+
     }
 
     /**
@@ -73,7 +121,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         }
         if(vertices.contains(e.v1())&&vertices.contains(e.v2())) {
             edges.add((e));
-            // assert(repInv());
+            assert(checkRep());
             return true;
         }
         return false;
@@ -130,7 +178,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                     return i.length();
                 }
             }
-
         }
         if(vertices.contains(v1)&&vertices.contains(v2)){
             return Integer.MAX_VALUE;
@@ -167,6 +214,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public boolean remove(E e) {
         if(edges.contains(e)){
             edges.remove(e);
+            assert(checkRep());
             return true;
         }
         return false;
@@ -183,7 +231,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public boolean remove(V v) {
         if(vertices.contains(v)){
             vertices.remove(v);
-            // assert(repInv());
+            assert(checkRep());
             return true;
         }
         return false;
@@ -317,8 +365,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         return plength;
     }
 
-
-//end of Dante's section
 
     /**
      * Compute the shortest path from source to sink
@@ -587,7 +633,4 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         }
     }
 
-
-
-//
 }
