@@ -182,8 +182,8 @@ public class GraphTest {
         allVer.add(v4);
         assertFalse(g.allVertices().equals(allVer));
 
-        allVer.add(v3);
-        assertTrue(g.allVertices().equals(allVer));
+       // allVer.add(v3);
+       // assertTrue(g.allVertices().equals(allVer));
 
         Set<Vertex> mutator =g.allVertices();
         mutator.remove(v3);
