@@ -58,8 +58,17 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                return false;
            }else if(i.length()<=0){
               return false;
-          }else if(edges.contains(new Edge(i.v2(),i.v1()))){
-              return false;
+          }
+          boolean fSelf=false;
+          for(Edge j:edges){
+              if (i.equals(j)) {
+                  if(fSelf){
+                      return false;
+                  }else{
+                      fSelf=true;
+                  }
+
+              }
           }
        }
 
