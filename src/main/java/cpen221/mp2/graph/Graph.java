@@ -217,7 +217,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         Set<E> onv=new HashSet<E>();
         for(E i:edges){
 
+
             if(i.v1().equals(v) || i.v2().equals(v)){
+
                 onv.add(i);
             }
         }
