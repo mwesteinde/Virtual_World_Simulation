@@ -232,7 +232,9 @@ public class GraphTest {
         path.add(v4);
         assertEquals(g.pathLength(path),Integer.MAX_VALUE);
 
-        }
+     }
+
+
         @Test(expected = noEdgeFoundException.class)
     public void except1(){
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();

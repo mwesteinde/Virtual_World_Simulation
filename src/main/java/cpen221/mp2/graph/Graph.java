@@ -216,6 +216,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public Set<E> allEdges(V v) {
         Set<E> onv=new HashSet<E>();
         for(E i:edges){
+
             if(i.v1().equals(v) || i.v2().equals(v)){
                 onv.add(i);
             }
@@ -245,7 +246,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * Access to this map **should not** permit graph mutations.
      *
      * @param v is the vertex whose neighbourhood we want.
-     * @return a map containing each vertex w that neighbors v and the edge between v and w.
+     * @return a map containing each vertex w that neighbors v and the edge between v and w. Empty if no edges exist.
      */
 
     @Override
@@ -294,7 +295,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * Compute the length of a given path
      *
      * @param path indicates vertices on a existing given path
-     * @return the length of path
+     * @return the length of path, Integer.MAX_VALUE if the path does not exist
      */
 
     @Override
