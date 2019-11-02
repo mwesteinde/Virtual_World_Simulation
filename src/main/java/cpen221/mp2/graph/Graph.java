@@ -68,12 +68,12 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     @Override
     public boolean addEdge(E e) {
 
-        if(edges.contains(e) || e.equals(null)){
+        if(edges.contains(e)||e.equals(null)){
             return false;
         }
         if(vertices.contains(e.v1())&&vertices.contains(e.v2())) {
             edges.add((e));
-           // assert(repInv());
+            //assert(repInv());
             return true;
         }
         return false;
