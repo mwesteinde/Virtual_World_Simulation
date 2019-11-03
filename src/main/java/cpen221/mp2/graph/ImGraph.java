@@ -1,6 +1,7 @@
 package cpen221.mp2.graph;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface ImGraph<V extends Vertex, E extends Edge<V>> {
@@ -60,6 +61,12 @@ public interface ImGraph<V extends Vertex, E extends Edge<V>> {
      * @return the edge connecting v1 and v2
      */
     public E getEdge(V v1, V v2);
+
+    public Set<E> allEdges();
+
+    Map<V, E> getNeighbours(V v);
+
+    public Set<V> allVertices();
 
 
 }

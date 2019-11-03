@@ -58,7 +58,7 @@ public class MillenniumFalcon implements Spaceship {
                 uni.addVertex(new Vertex(i.id(), "void"));
                 uni.addEdge(new Edge(new Vertex(i.id(), "void"),new Vertex(currentID, "void")));
 
-                if (i.id() == earthID&&unvisited.contains(new Vertex(earthID,"void"))) {
+                if (i.id() == earthID && unvisited.contains(new Vertex(earthID,"void"))) {
                     visited.add(i);
                     visitedG.add(new Vertex(i.id(),"void"));
                     unvisited.remove(i);
@@ -114,11 +114,60 @@ public class MillenniumFalcon implements Spaceship {
      */
     @Override
     public void gather(GathererStage state) {
+        ImGraph<Planet, Link> planetGraph = state.planetGraph();
+        Set <Link> edges = planetGraph.allEdges();
+        Set <Planet> vertices = planetGraph.allVertices();
+        List <Planet> pathHome = new ArrayList<>();
+
+        pathHome.add(state.earth());
+
+       // int spiceTotal = spiceSum(state.planetGraph().shortestPath(state.currentPlanet(), state.earth()));
+        int spiceShortestPath = spiceSum(state.planetGraph().shortestPath(state.currentPlanet(), state.earth()));
+
+        returnToEarth(findOptimalPath(state.currentPlanet(), state.earth(), planetGraph,0, 0, state, pathHome, spiceShortestPath), state);
 
         //pretty sure we want to hit as many planets as possible on the way back to earth. I think this is a variation of knapsack recursion question
         //same as before, use GathererStage interface methods to get to earth while reaching as many planets as possible
 
 
+    }
+
+    private List<Planet> findOptimalPath(Planet current, Planet earth, ImGraph<Planet, Link> planetGraph, int fuelUsed, int spiceCollected, GathererStage state, List<Planet> path, int spiceSum) {
+        List <Planet> pathHome = new ArrayList<>();
+        List <Planet> potentialPath = new ArrayList<>();
+        Map<Planet,Link> adjacentPlanets = new HashMap<>();
+
+
+
+        return pathHome;
+    }
+
+    private void returnToEarth(List<Planet> pathHome, GathererStage state) {
+        for (Planet i: pathHome) {
+            state.moveTo(i);
+        }
+    }
+
+    private int spiceSum(List<Planet> planetsVisited) {
+        int sum = 0;
+
+        for (Planet i: planetsVisited) {
+            sum += i.spice();
+        }
+
+        return sum;
+    }
+
+    private int fuelUsed(List<Planet> planetsVisited, ImGraph<Planet, Link> planetGraph) {
+        return planetGraph.pathLength(planetsVisited);
+    }
+
+    private boolean makeItHome(List<Planet> planetsVisited, ImGraph<Planet, Link> planetGraph, GathererStage state, int fuelUsed) {
+        if (planetGraph.pathLength(planetsVisited) + fuelUsed < state.fuelRemaining()) {
+            return true;
+        }
+
+        return false;
     }
 
 }
