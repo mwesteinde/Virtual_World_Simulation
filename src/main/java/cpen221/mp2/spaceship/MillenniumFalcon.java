@@ -21,32 +21,10 @@ import java.util.*;
 public class MillenniumFalcon implements Spaceship {
     long startTime = System.nanoTime(); // start time of rescue phase
 
-
     /**
-     * The spaceship is on the location given by parameter state.
-     * Move the spaceship to Kamino and then return.
-     * This completes the first phase of the mission.<br><br>
-     * <p>
-     * If the spaceship continues to move after reaching Kamino, rather than
-     * returning, it will not count. A return from this procedure while
-     * not on Kamino count as a failure.<br><br>
-     * <p>
-     * There is no limit to how many steps you can take, but the score is
-     * directly related to how long it takes you to find Kamino.<br><br>
-     * <p>
-     * At every step, you know only the current planet's ID, the IDs of
-     * neighboring planets, and the strength of the signal from Kamino
-     * at each planet.<br><br>
-     * <p>
-     * In this stage of the game,<br>
-     * (1) In order to get information about the current state, use
-     * functions currentID(), neighbors(), and signal().<br><br>
-     * <p>
-     * (2) Use method onKamino() to know if your ship is on Kamino.<br><br>
-     * <p>
-     * (3) Use method moveTo(int id) to move to a neighboring planet
-     * with the given ID. Doing this will change state to reflect the
-     * ship's new position.
+     * uses the Kamino signal to move between planets until it reaches Kamino
+     * @param state HunterStage starting location is earth and there is a path to Kamino
+     * @return when the ship in on Kamino, as indicated by state.onKamino()
      */
     @Override
     public void hunt(HunterStage state) {
@@ -60,7 +38,7 @@ public class MillenniumFalcon implements Spaceship {
 
         while(!state.onKamino()){
             newNeigh(unvisited,unvisitedG,visited,visitedG,uni,state.neighbors(),state.currentID(),earthID);
-            int closestID=findNext(unvisited, visited,unvisitedG, visitedG,uni);
+            int closestID=findNext(unvisited, visited,unvisitedG, visitedG,uni,state.currentID());
             List<Vertex> path= uni.shortestPath(new Vertex(state.currentID(),"void"),new Vertex(closestID,"void"));
             path.remove(0);
             for(Vertex i:path){
@@ -89,12 +67,12 @@ public class MillenniumFalcon implements Spaceship {
             }
         }
     }
-    private int findNext(Set<PlanetStatus> unvisited,Set<PlanetStatus> visited,Set<Vertex> unvisitedG,Set<Vertex> visitedG,Graph uni){
-        double closestSig = -1;
+    private int findNext(Set<PlanetStatus> unvisited,Set<PlanetStatus> visited,Set<Vertex> unvisitedG,Set<Vertex> visitedG,Graph uni,int currentID){
+        double closestSig = -100;
         int closestID = -1;
-
+        double tuningConstant=0.05;
         for (PlanetStatus i : unvisited) {
-            if (i.signal() > closestSig) {
+            if (i.signal()-tuningConstant*uni.pathLength(uni.shortestPath(new Vertex(currentID,"void"),new Vertex(i.id(),"void"))) > closestSig) {
                 closestID = i.id();
                 closestSig = i.signal();
             }
