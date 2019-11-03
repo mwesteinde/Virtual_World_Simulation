@@ -58,116 +58,58 @@ public class MillenniumFalcon implements Spaceship {
         Set<Vertex> unvisitedG=new HashSet<>();
         Set<Vertex> visitedG=new HashSet<>();
 
-        while(true) {
-            for (PlanetStatus i : state.neighbors()) {
+        while(!state.onKamino()){
+            newNeigh(unvisited,unvisitedG,visited,visitedG,uni,state.neighbors(),state.currentID(),earthID);
+            int closestID=findNext(unvisited, visited,unvisitedG, visitedG,uni);
+            List<Vertex> path= uni.shortestPath(new Vertex(state.currentID(),"void"),new Vertex(closestID,"void"));
+            path.remove(0);
+            for(Vertex i:path){
+                state.moveTo(i.id());
+            }
+        }
+
+        return;
+    }
+    private void newNeigh(Set<PlanetStatus> unvisited,Set<Vertex> unvisitedG,Set<PlanetStatus> visited,Set<Vertex> visitedG,Graph uni,PlanetStatus[] neighbors,int currentID,int earthID){
+        for (PlanetStatus i : neighbors) {
+            if (!visited.contains(i)) {
                 unvisited.add(i);
                 unvisitedG.add(new Vertex(i.id(), "void"));
                 uni.addVertex(new Vertex(i.id(), "void"));
-                uni.addEdge(new Edge((new Vertex(i.id(), "void")), (new Vertex(state.currentID(), "void"))));
-            }
+                uni.addEdge(new Edge(new Vertex(i.id(), "void"),new Vertex(currentID, "void")));
 
-            double closestSig = -1;
-            int closestID = -1;
-
-            for (PlanetStatus i : unvisited) {
-                if (i.signal() > closestSig) {
-                    closestID = i.id();
-                    closestSig = i.signal();
-                }
-            }
-            assert (closestID != -1);
-            for (PlanetStatus i : unvisited) {
-                if (i.id() == closestID) {
-                    unvisited.remove(i);
-                    unvisitedG.remove(new Vertex(i.id(), "void"));
-                    visited.add(i);
-                    visitedG.add(new Vertex(i.id(), "void"));
-                    break;
-                }
-            }
-
-
-
-            state.moveTo(closestID);
-
-
-            for (PlanetStatus i : state.neighbors()) {
-
-                if (!visited.contains(i)) {
-                    unvisited.add(i);
-                    unvisitedG.add(new Vertex(i.id(), "void"));
-                    uni.addVertex(new Vertex(i.id(), "void"));
-                    uni.addEdge(new Edge(new Vertex(i.id(), "void"),new Vertex(state.currentID(), "void")));
-
-                    if (i.id() == earthID) {
-                        visited.add(i);
-                        visitedG.add(new Vertex(i.id(),"void"));
-                        unvisited.remove(i);
-                        unvisitedG.remove(new Vertex(i.id(),"void"));
-                    }
-
-
-                }
-            }
-            break;
-        }
-
-        while(!state.onKamino()){
-            double closestSig=-1;
-            int closestID=-1;
-
-            for( PlanetStatus i:unvisited){
-                if(i.signal()>closestSig){
-                        closestID=i.id();
-                        closestSig=i.signal();
-                }
-            }
-            assert(closestID!=-1);
-            for( PlanetStatus i:unvisited){
-                if(i.id()==closestID){
-                    unvisited.remove(i);
-                    unvisitedG.remove(new Vertex(i.id(),"void"));
+                if (i.id() == earthID&&unvisited.contains(new Vertex(earthID,"void"))) {
                     visited.add(i);
                     visitedG.add(new Vertex(i.id(),"void"));
-                    break;
+                    unvisited.remove(i);
+                    unvisitedG.remove(new Vertex(i.id(),"void"));
                 }
+
+
             }
-
-                List<Vertex> path= uni.shortestPath(new Vertex(state.currentID(),"void"),new Vertex(closestID,"void"));
-                path.remove(0);
-                for(Vertex i:path){
-                    state.moveTo(i.id());
-                }
-
-            for(PlanetStatus i:state.neighbors()){
-                if(!visited.contains(i)){
-                    unvisited.add(i);
-                    unvisitedG.add(new Vertex(i.id(),"void"));
-                    uni.addVertex(new Vertex(i.id(), "void"));
-                    uni.addEdge(new Edge(new Vertex(i.id(), "void"),new Vertex(state.currentID(), "void")));
-                }
-            }
-
-
-         /*   for(PlanetStatus i:state.neighbors()){
-                if(!uni.vertex(new Vertex(i.id(),"void"))) {
-                    uni.addVertex(new Vertex(i.id(), "void"));
-                    uni.addEdge(new Edge((new Vertex(i.id(), "void")), (new Vertex(state.currentID(), "void"))));
-                }else if(!uni.edge(new Vertex(state.currentID(),"void"),new Vertex(i.id(),"void"))){
-                    uni.addEdge(new Edge(new Vertex(state.currentID(),"void"),new Vertex(i.id(),"void")));
-                }
-                if(!visited.contains(new Vertex(i.id(),"void"))){
-                    unvisited.add(new Vertex(state.currentID(),"void"));
-
-                }
-
-            }*/
-
         }
+    }
+    private int findNext(Set<PlanetStatus> unvisited,Set<PlanetStatus> visited,Set<Vertex> unvisitedG,Set<Vertex> visitedG,Graph uni){
+        double closestSig = -1;
+        int closestID = -1;
 
-
-
-        return;
+        for (PlanetStatus i : unvisited) {
+            if (i.signal() > closestSig) {
+                closestID = i.id();
+                closestSig = i.signal();
+            }
+        }
+        assert (closestID != -1);
+        for (PlanetStatus i : unvisited) {
+            if (i.id() == closestID) {
+                unvisited.remove(i);
+                unvisitedG.remove(new Vertex(i.id(), "void"));
+                visited.add(i);
+                visitedG.add(new Vertex(i.id(), "void"));
+                break;
+            }
+        }
+        return closestID;
     }
 
 
