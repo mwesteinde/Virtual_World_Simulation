@@ -25,6 +25,7 @@ public class MillenniumFalcon implements Spaceship {
      * uses the Kamino signal to move between planets until it reaches Kamino
      * @param state HunterStage starting location is earth and there is a path to Kamino
      * @return when the ship in on Kamino, as indicated by state.onKamino()
+     * @modifies state by moving to Kamino
      */
     @Override
     public void hunt(HunterStage state) {
@@ -48,6 +49,7 @@ public class MillenniumFalcon implements Spaceship {
 
         return;
     }
+
     private void newNeigh(Set<PlanetStatus> unvisited,Set<Vertex> unvisitedG,Set<PlanetStatus> visited,Set<Vertex> visitedG,Graph uni,PlanetStatus[] neighbors,int currentID,int earthID){
         for (PlanetStatus i : neighbors) {
             if (!visited.contains(i)) {
@@ -67,6 +69,7 @@ public class MillenniumFalcon implements Spaceship {
             }
         }
     }
+
     private int findNext(Set<PlanetStatus> unvisited,Set<PlanetStatus> visited,Set<Vertex> unvisitedG,Set<Vertex> visitedG,Graph uni,int currentID){
         double closestSig = -100;
         int closestID = -1;
