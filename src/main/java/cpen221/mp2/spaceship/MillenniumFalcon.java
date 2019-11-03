@@ -137,7 +137,20 @@ public class MillenniumFalcon implements Spaceship {
         List <Planet> potentialPath = new ArrayList<>();
         Map<Planet,Link> adjacentPlanets = new HashMap<>();
 
+        adjacentPlanets = planetGraph.getNeighbours(current);
 
+        for (Map.Entry<Planet,Link> i: adjacentPlanets.entrySet()) {
+            if (i.getKey().equals(earth)) {
+                return path;
+            }
+
+            if (makeItHome(planetGraph.shortestPath(i.getKey(), earth), planetGraph, state, fuelUsed + i.getValue().length())) {
+                if (spiceSum(planetGraph.shortestPath(i.getKey(), earth)) + spiceCollected > spiceSum) {
+                    path.add(i.getKey());
+                    findOptimalPath(i.getKey(), earth, planetGraph, fuelUsed += i.getValue().length(), spiceCollected += i.getKey().spice(), state, path, spiceSum(planetGraph.shortestPath(i.getKey(), earth)) + spiceCollected);
+                }
+            }
+        }
 
         return pathHome;
     }
