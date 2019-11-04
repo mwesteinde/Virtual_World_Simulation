@@ -116,62 +116,16 @@ public class MillenniumFalcon implements Spaceship {
     public void gather(GathererStage state) {
         ImGraph<Planet, Link> planetGraph = state.planetGraph();
         List <Planet> neighborsHome = new ArrayList<>();
-        Map <Planet, Link> neighbors =  new HashMap<>();
         Planet current = state.currentPlanet();
         Map <Planet, Integer> visitedPlanets = new HashMap<>();
         Planet last = null;
         Planet next = null;
-        boolean done1 = true;
 
         while (makeItHome(current, planetGraph, state, 0)) {
-            int maxSpice = 0;
-            int maxVisits = 0;
-            next = null;
-            neighborsHome = new ArrayList<>();
-            done1 = true;
+            addVisits(current, visitedPlanets);
+            neighborsHome = getAllPoints(planetGraph, current, state);
+            next = findNextPlanet(neighborsHome, state, visitedPlanets, last);
 
-            //gets all points that will make it home
-            neighbors = planetGraph.getNeighbours(current);
-
-            for (Map.Entry<Planet, Link> i: neighbors.entrySet()) {
-                if (makeItHome(i.getKey(), planetGraph, state, i.getValue().fuelNeeded())) {
-                    neighborsHome.add(i.getKey());
-                }
-            }
-
-            //adds times visited per planet to map
-            if (visitedPlanets.containsKey(current)) {
-                int value = visitedPlanets.get(current);
-                visitedPlanets.put(current, value + 1);
-            } else {
-                visitedPlanets.put(current, 1);
-            }
-
-            //finds next planet
-            for (Planet i:neighborsHome) {
-                if (i.spice() > maxSpice) {
-                    next = i;
-                    maxSpice = i.spice();
-                    done1 = false;
-                } else if (i.spice() == maxSpice && done1) {
-                    if (!i.equals(last)) {
-                        boolean sentinel1 = visitedPlanets.containsKey(i);
-                        if (sentinel1) {
-                            if (visitedPlanets.get(i) > maxVisits) {
-                                next = i;
-                                maxSpice = i.spice();
-                                maxVisits = visitedPlanets.get(i);
-                            }
-                        } else {
-                            next = i;
-                            maxSpice = i.spice();
-                        }
-                    } else if (next == null) {
-                        next = i;
-                    }
-
-                }
-            }
             if (next == null && state.currentPlanet().equals(state.earth())) {
                 return;
             }
@@ -179,10 +133,6 @@ public class MillenniumFalcon implements Spaceship {
             state.moveTo(next);
             last = current;
             current = next;
-
-
-
-
         }
 
     }
@@ -195,6 +145,64 @@ public class MillenniumFalcon implements Spaceship {
         //pretty sure we want to hit as many planets as possible on the way back to earth. I think this is a variation of knapsack recursion question
         //same as before, use GathererStage interface methods to get to earth while reaching as many planets as possible
 
+        //adds times visited per planet to map
+    private void addVisits(Planet current, Map <Planet, Integer> visitedPlanets) {
+        if (visitedPlanets.containsKey(current)) {
+            int value = visitedPlanets.get(current);
+            visitedPlanets.put(current, value + 1);
+        } else {
+            visitedPlanets.put(current, 1);
+        }
+    }
+
+    //gets all points that will make it home
+    private List <Planet> getAllPoints(ImGraph<Planet, Link> planetGraph, Planet current, GathererStage state) {
+        Map <Planet, Link> neighbors =  new HashMap<>();
+        List <Planet> neighborsHome = new ArrayList<>();
+
+        neighbors = planetGraph.getNeighbours(current);
+
+        for (Map.Entry<Planet, Link> i: neighbors.entrySet()) {
+            if (makeItHome(i.getKey(), planetGraph, state, i.getValue().fuelNeeded())) {
+                neighborsHome.add(i.getKey());
+            }
+        }
+        return neighborsHome;
+    }
+
+    //finds next planet
+    private Planet findNextPlanet(List <Planet> neighborsHome, GathererStage state, Map <Planet, Integer> visitedPlanets, Planet last) {
+        Planet next = null;
+        boolean done1 = true;
+        int maxSpice = 0;
+        int maxVisits = Integer.MAX_VALUE;
+
+        for (Planet i:neighborsHome) {
+            if (i.spice() > maxSpice) {
+                next = i;
+                maxSpice = i.spice();
+                done1 = false;
+            } else if (i.spice() == maxSpice && done1) {
+                if (!i.equals(last)) {
+                    boolean sentinel1 = visitedPlanets.containsKey(i);
+                    if (sentinel1) {
+                        if (visitedPlanets.get(i) < maxVisits) {
+                            next = i;
+                            maxSpice = i.spice();
+                            maxVisits = visitedPlanets.get(i);
+                        }
+                    } else {
+                        next = i;
+                        maxSpice = i.spice();
+                    }
+                } else if (next == null) {
+                    next = i;
+                }
+
+            }
+        }
+        return next;
+    }
 
     private boolean makeItHome(Planet current, ImGraph<Planet, Link> planetGraph, GathererStage state, int size) {
         if (planetGraph.pathLength(planetGraph.shortestPath(current, state.earth())) < state.fuelRemaining() - size) {
