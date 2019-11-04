@@ -118,8 +118,71 @@ public class MillenniumFalcon implements Spaceship {
         Set <Link> edges = planetGraph.allEdges();
         Set <Planet> vertices = planetGraph.allVertices();
         List <Planet> pathHome = new ArrayList<>();
+        Map <Planet, Link> neighbors =  new HashMap<>();
+        Planet current = state.currentPlanet();
+        int fuelUsed = 0;
+        boolean home = false;
+        boolean visits = false;
+        boolean sentinel = false;
+        Map <Planet, Integer> visitedPlanets = new HashMap<>();
+        Planet last = null;
 
-        pathHome.add(state.earth());
+        while (!current.equals(state.earth())) {
+            Planet next = null;
+            int maxSpice = 0;
+            int maxVisitedTimes = 0;
+            neighbors = planetGraph.getNeighbours(current);
+            for (Map.Entry <Planet, Link> i: neighbors.entrySet()) {
+                home = (makeItHome(i.getKey(), planetGraph, state));
+
+                if (!visitedPlanets.containsKey(i.getKey())) {
+
+                    if (!i.getKey().equals(last)) {
+
+
+                        if ((i.getKey().spice() > maxSpice) && home) {
+                            next = i.getKey();
+                            maxSpice = i.getKey().spice();
+                            if (visitedPlanets.containsKey(i.getKey())) {
+                                maxVisitedTimes = visitedPlanets.get(i.getKey());
+                            }
+                        } else if (i.getKey().spice() == maxSpice && home && (next == null || next.equals(last))) {
+                            if ((visitedPlanets.get(i.getKey()) == null || visitedPlanets.get(i.getKey()) < maxVisitedTimes) && home) {
+                                next = i.getKey();
+                                if (visitedPlanets.containsKey(i.getKey())) {
+                                    maxVisitedTimes = visitedPlanets.get(i.getKey());
+                                }
+                            } else if ((next == (null) || next.equals(last) || sentinel) && home) {
+                                next = i.getKey();
+                            }
+                        }
+                    } else if ((next == (null) || sentinel) && home) {
+                        next = last;
+                    }
+                } else if (next == null && home && !(i.getKey().equals(last))) {
+                    next = i.getKey();
+                    sentinel = true;
+                } else if (next == null && home) {
+                    next = i.getKey();
+                }
+            }
+
+
+            if (next == (null)) {
+                throw new NullPointerException();
+            }
+            last = current;
+            current = next;
+            state.moveTo(current);
+            if (visitedPlanets.containsKey(current)) {
+                int count = visitedPlanets.get(current) + 1;
+                visitedPlanets.put(current, count);
+            } else {
+                visitedPlanets.put(current, 1);
+            }
+        }
+
+      /*  pathHome.add(state.earth());
 
        // int spiceTotal = spiceSum(state.planetGraph().shortestPath(state.currentPlanet(), state.earth()));
         int spiceShortestPath = spiceSum(state.planetGraph().shortestPath(state.currentPlanet(), state.earth()));
@@ -129,7 +192,7 @@ public class MillenniumFalcon implements Spaceship {
         //pretty sure we want to hit as many planets as possible on the way back to earth. I think this is a variation of knapsack recursion question
         //same as before, use GathererStage interface methods to get to earth while reaching as many planets as possible
 
-
+*/
     }
 
     private List<Planet> findOptimalPath(Planet current, Planet earth, ImGraph<Planet, Link> planetGraph, int fuelUsed, int spiceCollected, GathererStage state, List<Planet> path, int spiceSum) {
@@ -137,20 +200,6 @@ public class MillenniumFalcon implements Spaceship {
         List <Planet> potentialPath = new ArrayList<>();
         Map<Planet,Link> adjacentPlanets = new HashMap<>();
 
-        adjacentPlanets = planetGraph.getNeighbours(current);
-
-        for (Map.Entry<Planet,Link> i: adjacentPlanets.entrySet()) {
-            if (i.getKey().equals(earth)) {
-                return path;
-            }
-
-            if (makeItHome(planetGraph.shortestPath(i.getKey(), earth), planetGraph, state, fuelUsed + i.getValue().length())) {
-                if (spiceSum(planetGraph.shortestPath(i.getKey(), earth)) + spiceCollected > spiceSum) {
-                    path.add(i.getKey());
-                    findOptimalPath(i.getKey(), earth, planetGraph, fuelUsed += i.getValue().length(), spiceCollected += i.getKey().spice(), state, path, spiceSum(planetGraph.shortestPath(i.getKey(), earth)) + spiceCollected);
-                }
-            }
-        }
 
         return pathHome;
     }
@@ -175,8 +224,8 @@ public class MillenniumFalcon implements Spaceship {
         return planetGraph.pathLength(planetsVisited);
     }
 
-    private boolean makeItHome(List<Planet> planetsVisited, ImGraph<Planet, Link> planetGraph, GathererStage state, int fuelUsed) {
-        if (planetGraph.pathLength(planetsVisited) + fuelUsed < state.fuelRemaining()) {
+    private boolean makeItHome(Planet current, ImGraph<Planet, Link> planetGraph, GathererStage state) {
+        if (planetGraph.pathLength(planetGraph.shortestPath(current, state.earth())) < state.fuelRemaining()) {
             return true;
         }
 
