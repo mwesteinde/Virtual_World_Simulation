@@ -2,16 +2,7 @@ package cpen221.mp2.graph;
 
 import javafx.util.Pair;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Stack;
-import java.util.LinkedList;
-import java.util.Random;
-import java.util.Deque;
+import java.util.*;
 
 /**
  * Abstraction function:
@@ -442,14 +433,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             V maxVertex = null;
             int minLength;
 
-
-            for (V vertex1 : vertices) {
-                if (sentinel) {
-                    connectedVertices.add(vertex1);
-                    untouchedVertices.remove(vertex1);
-                    sentinel = false;
-                }
-            }
+            connectedVertices.add(vertices.iterator().next());
+            untouchedVertices.remove(vertices.iterator().next());
 
             while (untouchedVertices.size() > 0) {
                 minLength = Integer.MAX_VALUE;

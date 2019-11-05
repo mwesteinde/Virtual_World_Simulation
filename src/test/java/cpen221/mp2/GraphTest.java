@@ -4,7 +4,10 @@ import cpen221.mp2.graph.Edge;
 import cpen221.mp2.graph.Graph;
 import cpen221.mp2.graph.Vertex;
 import cpen221.mp2.graph.noEdgeFoundException;
+import cpen221.mp2.spaceship.MillenniumFalcon;
+import cpen221.mp2.views.QuietView;
 import org.junit.Test;
+import cpen221.mp2.controllers.Kamino;
 
 import java.util.*;
 
@@ -290,6 +293,76 @@ public class GraphTest {
     }
 
     @Test
+    public void minSpan2(){
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+        Vertex v5 = new Vertex(5, "E");
+        Vertex v6 = new Vertex(6, "F");
+        Vertex v7 = new Vertex(7, "G");
+        Vertex v8 = new Vertex(8, "H");
+        Vertex v9 = new Vertex(9, "I");
+
+        Edge<Vertex> e1 = new Edge<>(v2, v1, 4);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 8);
+        Edge<Vertex> e3 = new Edge<>(v2, v8, 11);
+        Edge<Vertex> e4 = new Edge<>(v8, v9, 7);
+        Edge<Vertex> e5 = new Edge<>(v9, v7, 6);
+        Edge<Vertex> e6 = new Edge<>(v7, v6, 2);
+        Edge<Vertex> e7 = new Edge<>(v5, v6, 10);
+        Edge<Vertex> e8 = new Edge<>(v5, v4, 9);
+        Edge<Vertex> e9 = new Edge<>(v3, v4, 7);
+        Edge<Vertex> e10 = new Edge<>(v6, v3, 4);
+        Edge<Vertex> e11= new Edge<>(v9, v3, 2);
+        Edge<Vertex> e12 = new Edge<>(v6, v4, 14);
+        Edge<Vertex> e13 = new Edge<>(v8, v1, 8);
+        Edge<Vertex> e14 = new Edge<>(v7, v8, 1);
+
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addVertex(v5);
+        g.addVertex(v6);
+        g.addVertex(v7);
+        g.addVertex(v8);
+        g.addVertex(v9);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+        g.addEdge(e5);
+        g.addEdge(e6);
+        g.addEdge(e7);
+        g.addEdge(e8);
+        g.addEdge(e9);
+        g.addEdge(e10);
+        g.addEdge(e11);
+        g.addEdge(e12);
+        g.addEdge(e13);
+        g.addEdge(e14);
+        List<Edge<Vertex>> ret=g.minimumSpanningTree();
+        assertFalse(ret.contains(e2));
+        assertFalse(ret.contains(e7));
+        assertFalse(ret.contains(e3));
+        assertFalse(ret.contains(e4));
+        assertFalse(ret.contains(e5));
+        assertFalse(ret.contains(e12));
+        assertTrue(ret.contains(e1));
+        assertTrue(ret.contains(e13));
+        assertTrue(ret.contains(e6));
+        assertTrue(ret.contains(e14));
+        assertTrue(ret.contains(e10));
+        assertTrue(ret.contains(e11));
+        assertTrue(ret.contains(e8));
+        assertTrue(ret.contains(e9));
+
+
+    }
+
+    @Test
     public void diam1(){
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         Vertex v1 = new Vertex(1, "A");
@@ -334,6 +407,17 @@ public class GraphTest {
         assertTrue(ret.contains(v3));
 
 
+
+    }
+
+    @Test
+    public void testKamino() {
+        String [] s = {"-b"};
+
+
+        Kamino.main(s);
+        Kamino game = new Kamino(0, new MillenniumFalcon(), new QuietView());
+        game.start();
 
     }
 
