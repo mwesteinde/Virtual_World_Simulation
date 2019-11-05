@@ -428,7 +428,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             Set<V> untouchedVertices = new HashSet<>(vertices);
             List<V> connectedVertices = new ArrayList<>();
             List<E> returnedList = new ArrayList<>();
-            boolean sentinel = true;
             E max = null;
             V maxVertex = null;
             int minLength;

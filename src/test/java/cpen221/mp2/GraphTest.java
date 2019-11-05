@@ -363,6 +363,88 @@ public class GraphTest {
     }
 
     @Test
+    public void minSpan3(){
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+        Vertex v5 = new Vertex(5, "E");
+        Vertex v6 = new Vertex(6, "F");
+        Vertex v7 = new Vertex(7, "G");
+        Vertex v8 = new Vertex(8, "H");
+        Vertex v9 = new Vertex(9, "I");
+        Vertex v10 = new Vertex(10, "J");
+
+        Edge<Vertex> e1 = new Edge<>(v2, v1, 6);
+        Edge<Vertex> e2 = new Edge<>(v1, v5, 9);
+        Edge<Vertex> e3 = new Edge<>(v1, v4, 3);
+        Edge<Vertex> e4 = new Edge<>(v2, v4, 4);
+        Edge<Vertex> e5 = new Edge<>(v2, v3, 2);
+        Edge<Vertex> e6 = new Edge<>(v3, v4, 2);
+        Edge<Vertex> e7 = new Edge<>(v4, v6, 9);
+        Edge<Vertex> e8 = new Edge<>(v5, v4, 9);
+        Edge<Vertex> e9 = new Edge<>(v3, v6, 8);
+        Edge<Vertex> e10 = new Edge<>(v10, v3, 9);
+        Edge<Vertex> e11= new Edge<>(v2, v10, 9);
+        Edge<Vertex> e12 = new Edge<>(v6, v10, 7);
+        Edge<Vertex> e13 = new Edge<>(v5, v7, 18);
+        Edge<Vertex> e14 = new Edge<>(v7, v6, 10);
+        Edge<Vertex> e15 = new Edge<>(v6, v8, 9);
+        Edge<Vertex> e16 = new Edge<>(v8, v7, 3);
+        Edge<Vertex> e17 = new Edge<>(v7, v9, 4);
+        Edge<Vertex> e18 = new Edge<>(v8, v9, 1);
+        Edge<Vertex> e19 = new Edge<>(v8, v10, 5);
+        Edge<Vertex> e20 = new Edge<>(v10, v9, 4);
+        Edge<Vertex> e21 = new Edge<>(v5, v6, 8);
+
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addVertex(v5);
+        g.addVertex(v6);
+        g.addVertex(v7);
+        g.addVertex(v8);
+        g.addVertex(v9);
+        g.addVertex(v10);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+        g.addEdge(e5);
+        g.addEdge(e6);
+        g.addEdge(e7);
+        g.addEdge(e8);
+        g.addEdge(e9);
+        g.addEdge(e10);
+        g.addEdge(e11);
+        g.addEdge(e12);
+        g.addEdge(e13);
+        g.addEdge(e14);
+        g.addEdge(e15);
+        g.addEdge(e16);
+        g.addEdge(e17);
+        g.addEdge(e18);
+        g.addEdge(e19);
+        g.addEdge(e20);
+        g.addEdge(e21);
+
+        List<Edge<Vertex>> ret=g.minimumSpanningTree();
+        assertTrue(ret.contains(e3));
+        assertTrue(ret.contains(e6));
+        assertTrue(ret.contains(e5));
+        assertTrue(ret.contains(e9));
+        assertTrue(ret.contains(e21));
+        assertTrue(ret.contains(e12));
+        assertTrue(ret.contains(e20));
+        assertTrue(ret.contains(e18));
+        assertTrue(ret.contains(e16));
+
+
+    }
+
+    @Test
     public void diam1(){
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         Vertex v1 = new Vertex(1, "A");
