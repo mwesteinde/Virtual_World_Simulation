@@ -45,9 +45,6 @@ public class GraphTest {
         assertEquals(expected, g.shortestPath(v3, v4));
         assertEquals(21, g.pathLength(g.shortestPath(v3, v4)));
 
-
-
-        assertEquals(21, g.getMST());
     }
 
     @Test
@@ -88,10 +85,8 @@ public class GraphTest {
         g.addEdge(e5);
         g.addEdge(e6);
         g.addEdge(e7);
-        //assertEquals(e2, g.getEdge(v2, v3));
-        //assertEquals(expected, g.shortestPath(v3, v4));
-        //assertEquals(21, g.pathLength(g.shortestPath(v3, v4)));
-        assertEquals(11, g.getMST());
+        assertEquals(e2, g.getEdge(v2, v3));
+        assertEquals(8, g.pathLength(g.shortestPath(v3, v4)));
     }
 
     @Test

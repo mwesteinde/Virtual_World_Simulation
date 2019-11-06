@@ -455,7 +455,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             return returnedList;
         }
 
-        public int getMST () {
+        private int getMST () {
             List<E> list = minimumSpanningTree();
             int sum = 0;
             for (E edge : list) {
