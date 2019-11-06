@@ -15,7 +15,7 @@ import java.util.Deque;
 
 /**
  * Abstraction function:
- * Represents a graph with vertices and edges
+ * Represents a graph with vertices representing points and edges connecting them making a single graph where certain vertices may or may not be connected
  * @vertices contains all vertices of the graph
  * @edges contains all edges between these vertices in the graph
  *
@@ -25,7 +25,7 @@ import java.util.Deque;
  *
  * @edges contains edges made exclusively by vertices in @vertices
  * no two edges span the same two vertices
- *no edge has a length/weight of 0
+ *no edge has a length/weight less than zero
  * no edge is null
  *
  */
@@ -55,7 +55,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         for(Edge i:edges){
             if((!vertices.contains(i.v1())||(!vertices.contains(i.v2())))){
                 return false;
-            }else if(i.length()<=0){
+            }else if(i.length()<0){
                 return false;
             }
             boolean fSelf=false;
@@ -63,8 +63,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 if (i.equals(j)) {
                     if(fSelf){
                         return false;
-                    }else{
-                        fSelf=true;
                     }
 
                 }
@@ -82,8 +80,13 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean addVertex(V v) {
-        if(vertices.contains(v)||v.equals(null)){
+        if(v.equals(null)||vertices.contains(v)){
             return false;
+        }
+        for(Vertex i:vertices){
+            if(i.id()==v.id()){
+                return false;
+            }
         }
         vertices.add((v));
         assert(checkRep());
@@ -165,7 +168,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
          * @param v1 the first vertex of the edge
          * @param v2 the second vertex of the edge
          * @return the length of the v1-v2 edge if this edge is part of the graph, MAX_VALUE if this edge has not been added
-         * @throws noEdgeFoundException if one or more of the vertexes is not in graph
+         * @throws IllegalArgumentException if one or more of the vertexes is not in graph
          */
         @Override
         public int edgeLength (V v1, V v2){
@@ -175,8 +178,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             if (vertices.contains(v1) && vertices.contains(v2)) {
                 return Integer.MAX_VALUE;
             }
-            throw new noEdgeFoundException();
+            throw new IllegalArgumentException();
         }
+
 
 
         /**
@@ -302,7 +306,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
          * @param v1 one end of the edge
          * @param v2 the other end of the edge
          * @return the edge connecting v1 and v2
-         * @throws noEdgeFoundException if no edge exists
+         * @throws IllegalArgumentException if no edge exists
          */
 
         @Override
@@ -313,7 +317,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 }
 
             }
-            throw new noEdgeFoundException();
+            throw new IllegalArgumentException();
         }
 
         /**
