@@ -137,12 +137,6 @@ public class MillenniumFalcon implements Spaceship {
 
 
 
-
-
-
-        //pretty sure we want to hit as many planets as possible on the way back to earth. I think this is a variation of knapsack recursion question
-        //same as before, use GathererStage interface methods to get to earth while reaching as many planets as possible
-
         //adds times visited per planet to map
     private void addVisits(Planet current, Map<Planet, Integer> visitedPlanets) {
         if (visitedPlanets.containsKey(current)) {

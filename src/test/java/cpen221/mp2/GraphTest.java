@@ -167,6 +167,7 @@ public class GraphTest {
 
         Vertex v5 = new Vertex(5, "E");
         g.addVertex(v5);
+        assertFalse(g.addVertex(new Vertex(5, "vvvvvv")));
 
         assertTrue(g.remove(v5));
         assertFalse(g.remove(v5));
@@ -189,6 +190,8 @@ public class GraphTest {
         assertTrue(allEdg.equals(g.allEdges()));
         allEdg.add(e3);
         assertNotEquals(allEdg,g.allEdges());
+
+
 
     }
 
@@ -229,13 +232,13 @@ public class GraphTest {
      }
 
 
-        @Test(expected = noEdgeFoundException.class)
+        @Test(expected = IllegalArgumentException.class)
     public void except1(){
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.getEdge(new Vertex(1,"hi"),new Vertex(2,"bye"));
     }
 
-    @Test(expected = noEdgeFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void except2(){
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.edgeLength(new Vertex(1,"hi"),new Vertex(2,"bye"));
@@ -499,6 +502,52 @@ public class GraphTest {
     }
 
 
+    @Test
+    public void failRep1(){
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
 
+        Edge<Vertex> e1 = new Edge<>(v2, v1, 5);
+        Edge<Vertex> e3 = new Edge<>(v1, v3, 2);
+        Edge<Vertex> e4 = new Edge<>(v1, v4, 1);
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addEdge(e1);
+
+        g.addEdge(e3);
+        g.addEdge(e4);
+        g.allVertices().remove(v1);
+        assertFalse(g.checkRep());
+
+
+    }
+    @Test
+    public void failRep2(){
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+
+        Edge<Vertex> e1 = new Edge<>(v2, v1, 5);
+        Edge<Vertex> e3 = new Edge<>(v1, v3, 2);
+        Edge<Vertex> e4 = new Edge<>(v1, v4, 1);
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addEdge(e1);
+
+        g.addEdge(e3);
+        g.addEdge(e4);
+        g.allVertices().add(new Vertex(1,"a"));
+        assertFalse(g.checkRep());
+
+    }
 
 }
