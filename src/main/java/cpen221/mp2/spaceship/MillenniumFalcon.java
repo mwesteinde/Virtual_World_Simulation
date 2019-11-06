@@ -10,8 +10,6 @@ import cpen221.mp2.graph.Vertex;
 import cpen221.mp2.models.Link;
 import cpen221.mp2.models.Planet;
 import cpen221.mp2.models.PlanetStatus;
-import cpen221.mp2.util.Heap;
-import javafx.util.Pair;
 
 import java.util.*;
 
@@ -29,20 +27,20 @@ public class MillenniumFalcon implements Spaceship {
      */
     @Override
     public void hunt(HunterStage state) {
-        Graph<Vertex, Edge<Vertex>> uni=new Graph();
-        uni.addVertex(new Vertex(state.currentID(),"void"));
-        int earthID=state.currentID();
-        Set<PlanetStatus> unvisited=new HashSet<>();
-        Set<PlanetStatus> visited=new HashSet<>();
-        Set<Vertex> unvisitedG=new HashSet<>();
-        Set<Vertex> visitedG=new HashSet<>();
+        Graph<Vertex, Edge<Vertex>> uni = new Graph();
+        uni.addVertex(new Vertex(state.currentID(), "void"));
+        int earthID = state.currentID();
+        Set<PlanetStatus> unvisited = new HashSet<>();
+        Set<PlanetStatus> visited = new HashSet<>();
+        Set<Vertex> unvisitedG = new HashSet<>();
+        Set<Vertex> visitedG = new HashSet<>();
 
-        while(!state.onKamino()){
-            newNeigh(unvisited,unvisitedG,visited,visitedG,uni,state.neighbors(),state.currentID(),earthID);
-            int closestID=findNext(unvisited, visited,unvisitedG, visitedG,uni,state.currentID());
-            List<Vertex> path= uni.shortestPath(new Vertex(state.currentID(),"void"),new Vertex(closestID,"void"));
+        while (!state.onKamino()) {
+            newNeigh(unvisited, unvisitedG, visited, visitedG, uni, state.neighbors(), state.currentID(), earthID);
+            int closestID = findNext(unvisited, visited, unvisitedG, visitedG, uni, state.currentID());
+            List<Vertex> path = uni.shortestPath(new Vertex(state.currentID(), "void"), new Vertex(closestID, "void"));
             path.remove(0);
-            for(Vertex i:path){
+            for (Vertex i:path) {
                 state.moveTo(i.id());
             }
         }
@@ -50,19 +48,19 @@ public class MillenniumFalcon implements Spaceship {
         return;
     }
 
-    private void newNeigh(Set<PlanetStatus> unvisited,Set<Vertex> unvisitedG,Set<PlanetStatus> visited,Set<Vertex> visitedG,Graph uni,PlanetStatus[] neighbors,int currentID,int earthID){
+    private void newNeigh(Set<PlanetStatus> unvisited, Set<Vertex> unvisitedG, Set<PlanetStatus> visited, Set<Vertex> visitedG, Graph uni, PlanetStatus[] neighbors, int currentID, int earthID) {
         for (PlanetStatus i : neighbors) {
             if (!visited.contains(i)) {
                 unvisited.add(i);
                 unvisitedG.add(new Vertex(i.id(), "void"));
                 uni.addVertex(new Vertex(i.id(), "void"));
-                uni.addEdge(new Edge(new Vertex(i.id(), "void"),new Vertex(currentID, "void")));
+                uni.addEdge(new Edge(new Vertex(i.id(), "void"), new Vertex(currentID, "void")));
 
-                if (i.id() == earthID && unvisited.contains(new Vertex(earthID,"void"))) {
+                if (i.id() == earthID && unvisited.contains(new Vertex(earthID, "void"))) {
                     visited.add(i);
-                    visitedG.add(new Vertex(i.id(),"void"));
+                    visitedG.add(new Vertex(i.id(), "void"));
                     unvisited.remove(i);
-                    unvisitedG.remove(new Vertex(i.id(),"void"));
+                    unvisitedG.remove(new Vertex(i.id(), "void"));
                 }
 
 
@@ -70,12 +68,12 @@ public class MillenniumFalcon implements Spaceship {
         }
     }
 
-    private int findNext(Set<PlanetStatus> unvisited,Set<PlanetStatus> visited,Set<Vertex> unvisitedG,Set<Vertex> visitedG,Graph uni,int currentID){
-        double closestSig = -100;  //magic numbers
+    private int findNext(Set<PlanetStatus> unvisited, Set<PlanetStatus> visited, Set<Vertex> unvisitedG, Set<Vertex> visitedG, Graph uni, int currentID) {
+        double closestSig = -100;
         int closestID = -1;
-        double tuningConstant=0.05;
+        double tuningConstant = 0.05;
         for (PlanetStatus i : unvisited) {
-            if (i.signal()-tuningConstant*uni.pathLength(uni.shortestPath(new Vertex(currentID,"void"),new Vertex(i.id(),"void"))) > closestSig) {
+            if (i.signal() - tuningConstant * uni.pathLength(uni.shortestPath(new Vertex(currentID, "void"), new Vertex(i.id(), "void"))) > closestSig) {
                 closestID = i.id();
                 closestSig = i.signal();
             }
@@ -115,9 +113,9 @@ public class MillenniumFalcon implements Spaceship {
     @Override
     public void gather(GathererStage state) {
         ImGraph<Planet, Link> planetGraph = state.planetGraph();
-        List <Planet> neighborsHome = new ArrayList<>();
+        List<Planet> neighborsHome = new ArrayList<>();
         Planet current = state.currentPlanet();
-        Map <Planet, Integer> visitedPlanets = new HashMap<>();
+        Map<Planet, Integer> visitedPlanets = new HashMap<>();
         Planet last = null;
         Planet next = null;
 
@@ -146,7 +144,7 @@ public class MillenniumFalcon implements Spaceship {
         //same as before, use GathererStage interface methods to get to earth while reaching as many planets as possible
 
         //adds times visited per planet to map
-    private void addVisits(Planet current, Map <Planet, Integer> visitedPlanets) {
+    private void addVisits(Planet current, Map<Planet, Integer> visitedPlanets) {
         if (visitedPlanets.containsKey(current)) {
             int value = visitedPlanets.get(current);
             visitedPlanets.put(current, value + 1);
@@ -156,9 +154,9 @@ public class MillenniumFalcon implements Spaceship {
     }
 
     //gets all points that will make it home
-    private List <Planet> getAllPoints(ImGraph<Planet, Link> planetGraph, Planet current, GathererStage state) {
-        Map <Planet, Link> neighbors =  new HashMap<>();
-        List <Planet> neighborsHome = new ArrayList<>();
+    private List<Planet> getAllPoints(ImGraph<Planet, Link> planetGraph, Planet current, GathererStage state) {
+        Map<Planet, Link> neighbors =  new HashMap<>();
+        List<Planet> neighborsHome = new ArrayList<>();
 
         neighbors = planetGraph.getNeighbours(current);
 
@@ -171,7 +169,7 @@ public class MillenniumFalcon implements Spaceship {
     }
 
     //finds next planet
-    private Planet findNextPlanet(List <Planet> neighborsHome, GathererStage state, Map <Planet, Integer> visitedPlanets, Planet last) {
+    private Planet findNextPlanet(List<Planet> neighborsHome, GathererStage state, Map<Planet, Integer> visitedPlanets, Planet last) {
         Planet next = null;
         boolean done1 = true;
         int maxSpice = 0;
